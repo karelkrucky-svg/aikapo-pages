@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Graph – AIKAPO / Čím budu?</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: #131a2b;
+      --surface-hover: #1a2540;
+      --border: #1e2d4a;
+      --text: #e2e8f0;
+      --text-muted: #8899b4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #tooltip {
+      position: absolute;
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      max-width: 400px;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    #tooltip h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    #tooltip p {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    #tooltip .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    #legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      z-index: 50;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    #legend h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .legend-item:hover {
+      color: var(--text);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    #title-bar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 50;
+    }
+
+    #title-bar h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+    }
+
+    #title-bar p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    #controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 50;
+    }
+
+    .ctrl-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ctrl-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    #stats {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      z-index: 50;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    #stats strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="graph"></canvas>
+
+  <div id="title-bar">
+    <h1>Knowledge Graph – AIKAPO</h1>
+    <p>Projekt „Čím budu?" + AI platforma · Tažením posunete uzly · Kolečkem přiblížíte</p>
+  </div>
+
+  <div id="controls">
+    <button class="ctrl-btn" onclick="resetView()">Reset pohledu</button>
+    <button class="ctrl-btn" id="physicsBtn" onclick="togglePhysics()">Fyzika: ON</button>
+  </div>
+
+  <div id="legend">
+    <h4>Vrstvy projektu</h4>
+    <div class="legend-item" data-group="program">
+      <div class="legend-dot" style="background:#f59e0b"></div>Program „Čím budu?"
+    </div>
+    <div class="legend-item" data-group="student">
+      <div class="legend-dot" style="background:#6c5ce7"></div>AIKAPO – student
+    </div>
+    <div class="legend-item" data-group="facilitator">
+      <div class="legend-dot" style="background:#00cec9"></div>AIKAPO – facilitátor
+    </div>
+    <div class="legend-item" data-group="scaling">
+      <div class="legend-dot" style="background:#e17055"></div>AIKAPO – škálování
+    </div>
+    <div class="legend-item" data-group="system">
+      <div class="legend-dot" style="background:#fd79a8"></div>Systémová změna
+    </div>
+    <div class="legend-item" data-group="stakeholder">
+      <div class="legend-dot" style="background:#3b82f6"></div>Stakeholdeři
+    </div>
+    <div class="legend-item" data-group="theory">
+      <div class="legend-dot" style="background:#10b981"></div>Teorie & metody
+    </div>
+    <div class="legend-item" data-group="finance">
+      <div class="legend-dot" style="background:#64748b"></div>Financování & právo
+    </div>
+    <div class="legend-item" data-group="tech">
+      <div class="legend-dot" style="background:#06b6d4"></div>Technologie
+    </div>
+  </div>
+
+  <div id="stats">
+    <strong id="s-nodes">0</strong> uzlů · <strong id="s-edges">0</strong> vazeb · <strong>9</strong> tematických skupin
+  </div>
+
+  <div id="tooltip">
+    <h3 id="tt-title"></h3>
+    <p id="tt-desc"></p>
+    <span class="tag" id="tt-tag"></span>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('graph');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('tooltip');
+    let W, H, dpr;
+
+    function resize() {
+      dpr = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const colors = {
+      program: '#f59e0b',
+      student: '#6c5ce7',
+      facilitator: '#00cec9',
+      scaling: '#e17055',
+      system: '#fd79a8',
+      stakeholder: '#3b82f6',
+      theory: '#10b981',
+      finance: '#64748b',
+      tech: '#06b6d4'
+    };
+
+    // ===== NODES =====
+    const nodes = [
+      // Program „Čím budu?"
+      { id: 'cimbudu', label: 'Program\n„Čím budu?"', group: 'program', size: 42, desc: 'Skupinový kariérový program pro SŠ. 10 setkání/rok, 2,5 h, skupina 10–16. Pilot na 2 gymnáziích.' },
+      { id: 'pilot', label: 'Pilot\n2 gymnázia', group: 'program', size: 22, desc: '10 sezení × 2,5 h, 1× měsíčně. Pozorování: skupina funguje lépe než 1:1, studenti chodí čím dál víc.' },
+      { id: 'setkani', label: '10 setkání\n(Kolb cyklus)', group: 'program', size: 24, desc: 'Zkušenost → reflexe → zobecnění → aplikace. Témata: hodnoty, zájmy, odolnost, silné stránky, trh práce.' },
+      { id: 'vystupy', label: 'Výstupy\nstudenta', group: 'program', size: 20, desc: 'Akční plán (kroky, termíny), profesní portfolio, CV, motivační dopis, 1–3 kariérní cesty.' },
+      { id: 'evaluace', label: 'Evaluace\nA/B/C', group: 'program', size: 18, desc: 'A) Proces (docházka, bezpečí). B) Krátkodobě (pre/post, artefakty). C) Follow-up 3/6/12 měs.' },
+
+      // AIKAPO – student
+      { id: 'chatbot', label: 'Reflexní\nchatbot', group: 'student', size: 30, desc: 'AI chatbot mezi setkáními. 2–3 reflexní otázky po setkání. Student odpovídá, bot parafrázuje. Nediagnostikuje.' },
+      { id: 'portfolio', label: 'Digitální\nportfolio', group: 'student', size: 28, desc: 'Živý dokument: hodnoty, silné stránky, akční plán, CV, motivační dopis. AI pomáhá formulovat.' },
+      { id: 'rozcestnik', label: 'Rozcestník\nkariérních cest', group: 'student', size: 18, desc: 'Na základě hodnot/zájmů/silných stránek nabídne 3–5 oborů. Zdroje: Infoabsolvent, Atlas školství.' },
+      { id: 'simulator', label: 'Simulátor\npohovoru', group: 'student', size: 16, desc: 'AI hraje zaměstnavatele. Zpětná vazba na strukturu odpovědi, ne na „správnost".' },
+
+      // AIKAPO – facilitátor
+      { id: 'eval-engine', label: 'Evaluační\nengine', group: 'facilitator', size: 26, desc: 'Automatické zpracování pre/post dotazníků. AI kódování otevřených odpovědí. Dashboard + PDF report.' },
+      { id: 'denik', label: 'Deník\nfacilitátora', group: 'facilitator', size: 24, desc: 'Hlasová poznámka → Whisper přepis → AI extrakce témat, dynamiky, signálů → návrh úprav.' },
+      { id: 'triaz', label: 'Triáž\npro 1:1', group: 'facilitator', size: 18, desc: '5–7 otázek po setkání. Identifikuje studenty s vyšší potřebou individuální podpory. Dobrovolné.' },
+      { id: 'sparring', label: 'Sparring\npartner', group: 'facilitator', size: 20, desc: 'AI pomáhá připravit setkání: struktura podle Kolba, aktivity, reflexní otázky, pracovní listy.' },
+
+      // AIKAPO – škálování
+      { id: 'grant-ai', label: 'Grantový\nasistent', group: 'scaling', size: 22, desc: 'AI draft grantové žádosti / závěrečné zprávy. Struktura, rozpočet, logický rámec, indikátory.' },
+      { id: 'comm-hub', label: 'Komunikační\nhub', group: 'scaling', size: 20, desc: 'AI šablony e-mailů, letáky, FAQ chatbot na webu. Automatizace administrativy pro 6+ škol.' },
+      { id: 'manual', label: 'Metodický\nmanuál', group: 'scaling', size: 18, desc: 'AI generování a údržba manuálu pro nové facilitátory. Verzování, kontrola konzistence.' },
+      { id: 'web', label: 'Web\naikapo.cz', group: 'scaling', size: 20, desc: 'Landing page na GitHub Pages. Hero, srovnání, moduly, etika, roadmap, kontakt.' },
+
+      // Systémová změna
+      { id: 'impact', label: 'Impact\ndata', group: 'system', size: 26, desc: 'Agregované anonymizované výsledky. Posun kompetencí, spokojenost, follow-up. Evidence base.' },
+      { id: 'policy', label: 'Policy\nbrief', group: 'system', size: 20, desc: 'Jednostránkový dokument: problém + řešení + výsledky + doporučení. Pro stůl tvůrce politik.' },
+      { id: 'benchmark', label: 'Benchmarking\nškolamezi', group: 'system', size: 16, desc: 'Srovnání výsledků mezi školami, ročníky, regiony. Data pro výzkumníky.' },
+
+      // Stakeholdeři
+      { id: 'dominika', label: 'Dominika\nLustig', group: 'stakeholder', size: 32, desc: 'Autorka programu. Propojení pedagogiky a HR. FHS UK – kariérové poradenství. Supervizní výcvik TA.' },
+      { id: 'studenti', label: 'Studenti SŠ\n15–19 let', group: 'stakeholder', size: 28, desc: 'Primární cílová skupina. Gen Z: hledá smysl, zažívá stres z kariéry, potřebuje mentoring a skupinu.' },
+      { id: 'reditele', label: 'Ředitelé\nškol', group: 'stakeholder', size: 22, desc: 'Rozhodují o zapojení. Potřebují: data, RVP pokrytí, financování z šablon, referenci od kolegy.' },
+      { id: 'rodice', label: 'Rodiče\nstudentů', group: 'stakeholder', size: 18, desc: 'Nejsilnější vliv na kariérní rozhodování. Často zdroj tlaku. Program: dopis, workshop, FAQ.' },
+      { id: 'msmt', label: 'MŠMT\n/ NPI', group: 'stakeholder', size: 20, desc: 'Tvůrci politik. Cíl: policy brief s daty, doporučení pro systémovou podporu KP.' },
+      { id: 'ppp', label: 'PPP\n/ poradny', group: 'stakeholder', size: 16, desc: 'Pedagogicko-psychologické poradny. Pokud PPP doporučí program, multiplikační efekt.' },
+      { id: 'univerzity', label: 'Univerzity\nFHS/PedF UK', group: 'stakeholder', size: 18, desc: 'Akademická legitimita. Výzkum na datech. Diplomové/disertační práce. Nezávislá evaluace.' },
+
+      // Teorie & metody
+      { id: 'kolb', label: 'Kolbův\ncyklus', group: 'theory', size: 22, desc: 'Zážitek → reflexe → zobecnění → aplikace. Základ každého z 10 setkání programu.' },
+      { id: 'cms', label: 'Career\nManagement Skills', group: 'theory', size: 24, desc: 'OECD framework: porozumění sobě, orientace v možnostech, rozhodování, plánování, adaptace.' },
+      { id: 'adaptabilita', label: 'Adaptabilita\n& nejistota', group: 'theory', size: 20, desc: 'Dweck (growth mindset), Duckworth (grit). Nejistota jako přirozený stav, ne problém.' },
+      { id: 'etika', label: 'Etický\nrámec', group: 'theory', size: 24, desc: '6 principů: transparentnost, autonomie, bezpečí dat, hranice AI, rovný přístup, supervize.' },
+
+      // Financování
+      { id: 'opjak', label: 'OP JAK\nšablony', group: 'finance', size: 22, desc: '1.III/5 (kariérový poradce) + 1.III/10 (inovativní vzdělávání, 20 000 Kč/pololetí).' },
+      { id: 'erasmus', label: 'Erasmus+\nKA2', group: 'finance', size: 18, desc: 'Mezinárodní konsorcium. 100 000–400 000 EUR. Partner z Finska/Švédska. Horizont 12–18 měsíců.' },
+      { id: 'tacr', label: 'TAČR\nÉta/Sigma', group: 'finance', size: 16, desc: 'Aplikovaný výzkum AI ve vzdělávání. 1–10 mil. Kč. Spolupráce s univerzitou.' },
+      { id: 'licence', label: 'SaaS\nlicence', group: 'finance', size: 20, desc: '15 000–30 000 Kč/škola/rok. Break-even: 8–10 škol. Sociální korekce pro znevýhodněné regiony.' },
+
+      // Technologie
+      { id: 'claude', label: 'Claude\n/ GPT-4o', group: 'tech', size: 22, desc: 'LLM pro chatbot, portfolio asistenci, evaluaci, grantového asistenta. Custom system prompty.' },
+      { id: 'whisper', label: 'Whisper\nSTT', group: 'tech', size: 16, desc: 'Speech-to-text pro deník facilitátora. Hlasové poznámky → přepis → AI extrakce.' },
+      { id: 'nextjs', label: 'Next.js\n+ Supabase', group: 'tech', size: 20, desc: 'Frontend: Next.js (React, SSR). Backend: API Routes. DB: Supabase (PostgreSQL + Auth).' },
+      { id: 'vercel', label: 'Vercel\n+ GitHub', group: 'tech', size: 16, desc: 'Hosting: Vercel (frontend). CI/CD: GitHub Actions. Monitoring: Sentry + Plausible.' },
+    ];
+
+    // ===== EDGES =====
+    const edges = [
+      // Program jádro
+      { from: 'cimbudu', to: 'pilot', label: 'ověřeno', strength: 3 },
+      { from: 'cimbudu', to: 'setkani', label: 'struktura', strength: 3 },
+      { from: 'cimbudu', to: 'vystupy', label: 'produkuje', strength: 2.5 },
+      { from: 'cimbudu', to: 'evaluace', label: 'měří', strength: 2 },
+      { from: 'setkani', to: 'kolb', label: 'metodika', strength: 3 },
+      { from: 'cimbudu', to: 'cms', label: 'framework', strength: 2.5 },
+      { from: 'cimbudu', to: 'adaptabilita', label: 'pilíř', strength: 2 },
+
+      // Program → AIKAPO student
+      { from: 'cimbudu', to: 'chatbot', label: 'AI rozšíření', strength: 3.5 },
+      { from: 'cimbudu', to: 'portfolio', label: 'digitalizace', strength: 3 },
+      { from: 'vystupy', to: 'portfolio', label: 'digitální verze', strength: 3 },
+      { from: 'chatbot', to: 'portfolio', label: 'ukládá reflexe', strength: 2 },
+      { from: 'portfolio', to: 'rozcestnik', label: 'data studenta', strength: 2 },
+      { from: 'portfolio', to: 'simulator', label: 'CV + příprava', strength: 1.5 },
+
+      // Program → AIKAPO facilitátor
+      { from: 'evaluace', to: 'eval-engine', label: 'automatizace', strength: 3 },
+      { from: 'setkani', to: 'denik', label: 'po setkání', strength: 2.5 },
+      { from: 'setkani', to: 'sparring', label: 'příprava', strength: 2 },
+      { from: 'chatbot', to: 'triaz', label: 'signály', strength: 2 },
+      { from: 'sparring', to: 'kolb', label: 'podle Kolba', strength: 2 },
+
+      // AIKAPO škálování
+      { from: 'cimbudu', to: 'grant-ai', label: 'financování', strength: 2 },
+      { from: 'cimbudu', to: 'comm-hub', label: 'komunikace', strength: 1.5 },
+      { from: 'cimbudu', to: 'manual', label: 'škálování', strength: 2 },
+      { from: 'cimbudu', to: 'web', label: 'prezentace', strength: 1.5 },
+
+      // Systémová změna
+      { from: 'eval-engine', to: 'impact', label: 'generuje data', strength: 3 },
+      { from: 'impact', to: 'policy', label: 'argumentace', strength: 2.5 },
+      { from: 'impact', to: 'benchmark', label: 'srovnání', strength: 2 },
+      { from: 'policy', to: 'msmt', label: 'doručeno', strength: 2.5 },
+
+      // Stakeholdeři
+      { from: 'dominika', to: 'cimbudu', label: 'autorka', strength: 4 },
+      { from: 'studenti', to: 'chatbot', label: 'používá', strength: 3 },
+      { from: 'studenti', to: 'portfolio', label: 'plní', strength: 2.5 },
+      { from: 'studenti', to: 'setkani', label: 'účastní se', strength: 3 },
+      { from: 'reditele', to: 'cimbudu', label: 'schvalují', strength: 2.5 },
+      { from: 'rodice', to: 'comm-hub', label: 'FAQ, letáky', strength: 1.5 },
+      { from: 'univerzity', to: 'impact', label: 'výzkum', strength: 2 },
+      { from: 'ppp', to: 'cimbudu', label: 'doporučují', strength: 1.5 },
+
+      // Etika
+      { from: 'etika', to: 'chatbot', label: 'reguluje', strength: 2.5 },
+      { from: 'etika', to: 'portfolio', label: 'GDPR', strength: 2 },
+      { from: 'etika', to: 'eval-engine', label: 'anonymizace', strength: 2 },
+
+      // Financování
+      { from: 'opjak', to: 'cimbudu', label: 'financuje', strength: 2.5 },
+      { from: 'opjak', to: 'grant-ai', label: 'pomáhá psát', strength: 1.5 },
+      { from: 'erasmus', to: 'cimbudu', label: 'mezinárodní', strength: 1.5 },
+      { from: 'tacr', to: 'impact', label: 'výzkumný grant', strength: 1.5 },
+      { from: 'licence', to: 'reditele', label: 'platí škola', strength: 2 },
+
+      // Technologie
+      { from: 'claude', to: 'chatbot', label: 'LLM', strength: 3 },
+      { from: 'claude', to: 'sparring', label: 'LLM', strength: 2 },
+      { from: 'claude', to: 'eval-engine', label: 'kódování', strength: 2 },
+      { from: 'claude', to: 'grant-ai', label: 'drafting', strength: 2 },
+      { from: 'whisper', to: 'denik', label: 'přepis hlasu', strength: 3 },
+      { from: 'nextjs', to: 'portfolio', label: 'frontend', strength: 2 },
+      { from: 'nextjs', to: 'chatbot', label: 'frontend', strength: 2 },
+      { from: 'vercel', to: 'web', label: 'hosting', strength: 2 },
+      { from: 'vercel', to: 'nextjs', label: 'deploy', strength: 2 },
+    ];
+
+    document.getElementById('s-nodes').textContent = nodes.length;
+    document.getElementById('s-edges').textContent = edges.length;
+
+    let cx = W / 2, cy = H / 2;
+
+    const groupPositions = {
+      program: { x: 0, y: -40 },
+      student: { x: -280, y: 60 },
+      facilitator: { x: 260, y: 60 },
+      scaling: { x: -180, y: 260 },
+      system: { x: 180, y: 260 },
+      stakeholder: { x: -400, y: -160 },
+      theory: { x: 350, y: -180 },
+      finance: { x: -370, y: 310 },
+      tech: { x: 370, y: 310 },
+    };
+
+    nodes.forEach(n => {
+      const gp = groupPositions[n.group];
+      const sameGroup = nodes.filter(nn => nn.group === n.group);
+      const idx = sameGroup.indexOf(n);
+      const angle = (idx / sameGroup.length) * Math.PI * 2 + Math.random() * 0.3;
+      const r = 30 + Math.random() * 60;
+      n.x = cx + gp.x + Math.cos(angle) * r;
+      n.y = cy + gp.y + Math.sin(angle) * r;
+      n.vx = 0;
+      n.vy = 0;
+    });
+
+    let physicsOn = true;
+    let hoveredNode = null;
+    let dragNode = null;
+    let panX = 0, panY = 0;
+    let zoom = 1;
+    let isPanning = false;
+    let animFrame = 0;
+
+    function screenToWorld(sx, sy) {
+      return { x: (sx - panX) / zoom, y: (sy - panY) / zoom };
+    }
+
+    function simulate() {
+      if (!physicsOn) return;
+      const repulsion = 12000;
+      const edgeSpring = 0.003;
+      const damping = 0.80;
+      const centerPull = 0.0003;
+
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          let dx = a.x - b.x;
+          let dy = a.y - b.y;
+          let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          let force = repulsion / (dist * dist);
+          let fx = (dx / dist) * force;
+          let fy = (dy / dist) * force;
+          a.vx += fx; a.vy += fy;
+          b.vx -= fx; b.vy -= fy;
+        }
+        a.vx += (cx - a.x) * centerPull;
+        a.vy += (cy - a.y) * centerPull;
+      }
+
+      edges.forEach(e => {
+        const a = nodes.find(n => n.id === e.from);
+        const b = nodes.find(n => n.id === e.to);
+        if (!a || !b) return;
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        let ideal = 140 / (e.strength || 1);
+        let force = (dist - ideal) * edgeSpring * (e.strength || 1);
+        let fx = (dx / dist) * force;
+        let fy = (dy / dist) * force;
+        a.vx += fx; a.vy += fy;
+        b.vx -= fx; b.vy -= fy;
+      });
+
+      nodes.forEach(n => {
+        if (n === dragNode) return;
+        n.vx *= damping;
+        n.vy *= damping;
+        n.x += n.vx;
+        n.y += n.vy;
+      });
+    }
+
+    function draw() {
+      animFrame++;
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.save();
+      ctx.translate(panX, panY);
+      ctx.scale(zoom, zoom);
+
+      ctx.strokeStyle = 'rgba(30,45,74,0.3)';
+      ctx.lineWidth = 0.5;
+      const gridSize = 80;
+      const startX = Math.floor(((-panX / zoom) - 200) / gridSize) * gridSize;
+      const startY = Math.floor(((-panY / zoom) - 200) / gridSize) * gridSize;
+      const endX = startX + (W / zoom) + 400;
+      const endY = startY + (H / zoom) + 400;
+      for (let x = startX; x < endX; x += gridSize) {
+        ctx.beginPath(); ctx.moveTo(x, startY); ctx.lineTo(x, endY); ctx.stroke();
+      }
+      for (let y = startY; y < endY; y += gridSize) {
+        ctx.beginPath(); ctx.moveTo(startX, y); ctx.lineTo(endX, y); ctx.stroke();
+      }
+
+      edges.forEach(e => {
+        const a = nodes.find(n => n.id === e.from);
+        const b = nodes.find(n => n.id === e.to);
+        if (!a || !b) return;
+        const isHighlighted = hoveredNode && (hoveredNode.id === e.from || hoveredNode.id === e.to);
+        const alpha = hoveredNode ? (isHighlighted ? 0.7 : 0.06) : 0.22;
+        const width = isHighlighted ? 2.5 : 1;
+        ctx.beginPath();
+        const midX = (a.x + b.x) / 2;
+        const midY = (a.y + b.y) / 2;
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const offset = 15;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        const cpx = midX + (-dy / len) * offset;
+        const cpy = midY + (dx / len) * offset;
+        ctx.moveTo(a.x, a.y);
+        ctx.quadraticCurveTo(cpx, cpy, b.x, b.y);
+        if (isHighlighted) {
+          ctx.strokeStyle = colors[a.group];
+          ctx.shadowColor = colors[a.group];
+          ctx.shadowBlur = 8;
+        } else {
+          ctx.strokeStyle = `rgba(100,130,180,${alpha})`;
+          ctx.shadowBlur = 0;
+        }
+        ctx.lineWidth = width;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        if (isHighlighted && e.label) {
+          ctx.font = '600 10px IBM Plex Sans';
+          ctx.fillStyle = 'rgba(226,232,240,0.85)';
+          ctx.textAlign = 'center';
+          ctx.fillText(e.label, cpx, cpy - 8);
+        }
+      });
+
+      nodes.forEach(n => {
+        const isHovered = hoveredNode === n;
+        const isConnected = hoveredNode && edges.some(e =>
+          (e.from === hoveredNode.id && e.to === n.id) ||
+          (e.to === hoveredNode.id && e.from === n.id)
+        );
+        const dimmed = hoveredNode && !isHovered && !isConnected;
+        const alpha = dimmed ? 0.12 : 1;
+        const color = colors[n.group];
+        ctx.globalAlpha = alpha;
+        const pulseSize = isHovered ? 4 * Math.sin(animFrame * 0.05) : 0;
+        const glowR = n.size + (isHovered ? 24 : 10) + pulseSize;
+        const grd = ctx.createRadialGradient(n.x, n.y, n.size * 0.2, n.x, n.y, glowR);
+        grd.addColorStop(0, color + (isHovered ? '50' : '20'));
+        grd.addColorStop(1, color + '00');
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, glowR, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
+        const innerGrd = ctx.createRadialGradient(n.x - n.size * 0.3, n.y - n.size * 0.3, 0, n.x, n.y, n.size);
+        innerGrd.addColorStop(0, color + (isHovered ? 'cc' : '66'));
+        innerGrd.addColorStop(1, color + (isHovered ? '88' : '22'));
+        ctx.fillStyle = innerGrd;
+        ctx.fill();
+        ctx.strokeStyle = color + (isHovered ? 'ff' : '99');
+        ctx.lineWidth = isHovered ? 2.5 : 1.5;
+        ctx.stroke();
+        const fontSize = isHovered ? 12 : 11;
+        ctx.font = `${isHovered ? '600' : '400'} ${fontSize}px IBM Plex Sans`;
+        ctx.fillStyle = `rgba(226,232,240,${alpha})`;
+        ctx.textAlign = 'center';
+        const lines = n.label.split('\n');
+        lines.forEach((line, i) => {
+          ctx.fillText(line, n.x, n.y + n.size + 16 + i * 15);
+        });
+        ctx.globalAlpha = 1;
+      });
+
+      ctx.restore();
+      simulate();
+      requestAnimationFrame(draw);
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      if (dragNode) {
+        const w = screenToWorld(mx, my);
+        dragNode.x = w.x; dragNode.y = w.y;
+        dragNode.vx = 0; dragNode.vy = 0;
+        tooltip.style.display = 'none';
+        return;
+      }
+      if (isPanning) {
+        panX += e.movementX; panY += e.movementY;
+        tooltip.style.display = 'none';
+        return;
+      }
+      const w = screenToWorld(mx, my);
+      let found = null;
+      for (const n of nodes) {
+        const dx = w.x - n.x; const dy = w.y - n.y;
+        if (Math.sqrt(dx * dx + dy * dy) < n.size + 10) { found = n; break; }
+      }
+      hoveredNode = found;
+      canvas.style.cursor = found ? 'grab' : 'default';
+      if (found) {
+        document.getElementById('tt-title').textContent = found.label.replace('\n', ' ');
+        document.getElementById('tt-desc').textContent = found.desc;
+        const tag = document.getElementById('tt-tag');
+        tag.textContent = found.group;
+        tag.style.background = colors[found.group] + '33';
+        tag.style.color = colors[found.group];
+        tooltip.style.display = 'block';
+        let tx = mx + 18; let ty = my - 12;
+        if (tx + 400 > W) tx = mx - 410;
+        if (ty + 120 > H) ty = my - 120;
+        tooltip.style.left = tx + 'px'; tooltip.style.top = ty + 'px';
+      } else { tooltip.style.display = 'none'; }
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
+      const w = screenToWorld(mx, my);
+      for (const n of nodes) {
+        const dx = w.x - n.x; const dy = w.y - n.y;
+        if (Math.sqrt(dx * dx + dy * dy) < n.size + 10) {
+          dragNode = n; canvas.style.cursor = 'grabbing'; return;
+        }
+      }
+      isPanning = true; canvas.style.cursor = 'move';
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      dragNode = null; isPanning = false;
+      canvas.style.cursor = hoveredNode ? 'grab' : 'default';
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
+      const delta = e.deltaY > 0 ? 0.92 : 1.08;
+      const newZoom = Math.max(0.25, Math.min(4, zoom * delta));
+      panX = mx - (mx - panX) * (newZoom / zoom);
+      panY = my - (my - panY) * (newZoom / zoom);
+      zoom = newZoom;
+    }, { passive: false });
+
+    function resetView() {
+      panX = 0; panY = 0; zoom = 1;
+      cx = W / 2; cy = H / 2;
+      nodes.forEach(n => {
+        const gp = groupPositions[n.group];
+        const sameGroup = nodes.filter(nn => nn.group === n.group);
+        const idx = sameGroup.indexOf(n);
+        const angle = (idx / sameGroup.length) * Math.PI * 2;
+        const r = 30 + Math.random() * 60;
+        n.x = cx + gp.x + Math.cos(angle) * r;
+        n.y = cy + gp.y + Math.sin(angle) * r;
+        n.vx = 0; n.vy = 0;
+      });
+    }
+
+    function togglePhysics() {
+      physicsOn = !physicsOn;
+      document.getElementById('physicsBtn').textContent = 'Fyzika: ' + (physicsOn ? 'ON' : 'OFF');
+    }
+
+    document.querySelectorAll('.legend-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const group = item.dataset.group;
+        const groupNodes = nodes.filter(n => n.group === group);
+        if (groupNodes.length === 0) return;
+        let avgX = 0, avgY = 0;
+        groupNodes.forEach(n => { avgX += n.x; avgY += n.y; });
+        avgX /= groupNodes.length; avgY /= groupNodes.length;
+        zoom = 1.5;
+        panX = W / 2 - avgX * zoom;
+        panY = H / 2 - avgY * zoom;
+      });
+    });
+
+    draw();
+  </script>
+</body>
+
+</html>

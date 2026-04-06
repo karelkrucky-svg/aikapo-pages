@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIKAPO – AI Kariérový Průvodce</title>
+  <meta name="description"
+    content="AI platforma pro kariérové vzdělávání středoškoláků. Reflexní chatbot, digitální portfolio, evaluace – vše pro program Čím budu? a další.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <span class="nav__logo-ai">AI</span>KAPO
+      </a>
+      <div class="nav__links">
+        <a href="#problem">Proč</a>
+        <a href="#program">Program</a>
+        <a href="#moduly">AI moduly</a>
+        <a href="#cisla">Čísla</a>
+        <a href="#kontakt" class="btn btn--sm">Kontakt</a>
+      </div>
+      <button class="nav__burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu">
+      <a href="#problem">Proč</a>
+      <a href="#program">Program</a>
+      <a href="#moduly">AI moduly</a>
+      <a href="#cisla">Čísla</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="hero">
+    <div class="hero__bg">
+      <div class="hero__grid"></div>
+      <div class="hero__glow hero__glow--1"></div>
+      <div class="hero__glow hero__glow--2"></div>
+    </div>
+    <div class="hero__content">
+      <div class="hero__badge fade-up">AI + kariérové vzdělávání</div>
+      <h1 class="hero__title fade-up">
+        Aby studenti věděli,<br>
+        <span class="hero__title--accent">kam míří</span>
+      </h1>
+      <p class="hero__sub fade-up">
+        AIKAPO je AI platforma, která pomáhá středoškolákům najít svou cestu – a facilitátorům škálovat kariérové
+        programy bez ztráty kvality.
+      </p>
+      <div class="hero__cta fade-up">
+        <a href="#moduly" class="btn btn--primary">Jak to funguje</a>
+        <a href="#kontakt" class="btn btn--outline">Chci vědět víc</a>
+      </div>
+      <div class="hero__stats fade-up">
+        <div class="hero__stat">
+          <span class="hero__stat-num" data-count="40">0</span><span class="hero__stat-pct">%</span>
+          <span class="hero__stat-label">studentů nemá kariérní plán</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-num" data-count="69">0</span><span class="hero__stat-pct">%</span>
+          <span class="hero__stat-label">zažívá stres z volby kariéry</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-num" data-count="15">0</span><span class="hero__stat-pct">%</span>
+          <span class="hero__stat-label">Čechů má zkušenost s KP</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero__scroll">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </header>
+
+  <!-- PROBLEM -->
+  <section class="section section--dark" id="problem">
+    <div class="container">
+      <div class="section__header fade-up">
+        <span class="section__label">Problém</span>
+        <h2 class="section__title">Kariérové poradenství, jak ho známe, bylo navrženo pro svět, který už neexistuje</h2>
+        <p class="section__sub">Svět stabilních profesí, jednoho rozhodnutí a experta, který ví. Dnešní studenti žijí v
+          jiném světě – a potřebují jiné nástroje.</p>
+      </div>
+      <div class="compare fade-up">
+        <div class="compare__col compare__col--old">
+          <h3 class="compare__heading">Tradiční poradenství</h3>
+          <ul class="compare__list">
+            <li>Jednorázový test (2,5 h)</li>
+            <li>Expert říká odpověď</li>
+            <li>Cíl: vybrat obor</li>
+            <li>Žák je pasivní příjemce</li>
+            <li>Žádná evaluace</li>
+            <li>Nejistota = problém</li>
+          </ul>
+        </div>
+        <div class="compare__divider">
+          <span>vs.</span>
+        </div>
+        <div class="compare__col compare__col--new">
+          <h3 class="compare__heading">Program „Čím budu?" + AIKAPO</h3>
+          <ul class="compare__list">
+            <li>10 setkání v průběhu roku</li>
+            <li>Průvodce provází procesem</li>
+            <li>Cíl: naučit se rozhodovat</li>
+            <li>Student aktivně tvoří</li>
+            <li>Třístupňová evaluace</li>
+            <li>Nejistota = přirozený stav</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAM -->
+  <section class="section" id="program">
+    <div class="container">
+      <div class="section__header fade-up">
+        <span class="section__label">Program „Čím budu?"</span>
+        <h2 class="section__title">Skupinový kariérový program pro středoškoláky</h2>
+        <p class="section__sub">Ověřená metodika (Kolb, CMS, adaptabilita). Pilot na 2 gymnáziích. Cíl: 6+ škol v roce
+          2026/27.</p>
+      </div>
+      <div class="pillars fade-up">
+        <div class="pillar">
+          <div class="pillar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" />
+            </svg>
+          </div>
+          <h3 class="pillar__title">10 setkání</h3>
+          <p class="pillar__text">1× měsíčně, 2,5 hodiny. Skupina 10–16 studentů. Bezpečný prostor pro sebepoznání a
+            peer learning.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <h3 class="pillar__title">3 pilíře</h3>
+          <p class="pillar__text">Aktivní zapojení v kariérovém poradenství. Zážitkové učení a reflexe (Kolb).
+            Adaptabilita a práce s nejistotou.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M16 13H8" />
+              <path d="M16 17H8" />
+              <path d="M10 9H8" />
+            </svg>
+          </div>
+          <h3 class="pillar__title">Výstupy</h3>
+          <p class="pillar__text">Akční plán s kroky a termíny. Profesní portfolio. Životopis. 1–3 kariérní cesty v
+            souladu s profilem studenta.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <h3 class="pillar__title">Pro koho</h3>
+          <p class="pillar__text">Studenti SŠ (15–19 let). Gymnázia i SOŠ. Otevřený program, celé třídy, nebo zaškolení
+            interního poradce.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AIKAPO MODULY -->
+  <section class="section section--dark" id="moduly">
+    <div class="container">
+      <div class="section__header fade-up">
+        <span class="section__label">AIKAPO platforma</span>
+        <h2 class="section__title">AI jako spojenec, ne náhrada</h2>
+        <p class="section__sub">8 modulů ve 4 vrstvách. Facilitátor zůstává středobodem – AI řeší to, co člověk nemůže
+          škálovat.</p>
+      </div>
+
+      <div class="layers fade-up">
+        <!-- Vrstva 1 -->
+        <div class="layer">
+          <div class="layer__header">
+            <span class="layer__num">01</span>
+            <h3 class="layer__title">Pro studenty</h3>
+            <p class="layer__desc">Udržet reflexi a rozvoj mezi setkáními</p>
+          </div>
+          <div class="layer__modules">
+            <div class="module">
+              <div class="module__icon">💬</div>
+              <h4 class="module__title">Reflexní chatbot</h4>
+              <p class="module__text">Po setkání pošle 2–3 otázky k zamyšlení. Student odpovídá, AI parafrázuje a klade
+                doplňující otázky. Udržuje momentum.</p>
+            </div>
+            <div class="module">
+              <div class="module__icon">📋</div>
+              <h4 class="module__title">Digitální portfolio</h4>
+              <p class="module__text">Živý dokument: hodnoty, silné stránky, akční plán, CV. AI pomáhá formulovat,
+                student rozhoduje.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vrstva 2 -->
+        <div class="layer">
+          <div class="layer__header">
+            <span class="layer__num">02</span>
+            <h3 class="layer__title">Pro facilitátory</h3>
+            <p class="layer__desc">Úspora času pro to, co AI neumí – vztahovou práci</p>
+          </div>
+          <div class="layer__modules">
+            <div class="module">
+              <div class="module__icon">📊</div>
+              <h4 class="module__title">Evaluační engine</h4>
+              <p class="module__text">Automatické zpracování dotazníků, kódování odpovědí, dashboard s grafy. Hodiny
+                práce za minuty.</p>
+            </div>
+            <div class="module">
+              <div class="module__icon">🎙️</div>
+              <h4 class="module__title">Deník facilitátora</h4>
+              <p class="module__text">Hlasová poznámka po setkání → AI přepíše, extrahuje témata, navrhne úpravy dalšího
+                setkání.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vrstva 3 -->
+        <div class="layer">
+          <div class="layer__header">
+            <span class="layer__num">03</span>
+            <h3 class="layer__title">Pro škálování</h3>
+            <p class="layer__desc">Z 2 škol na 30 bez lineárního růstu nákladů</p>
+          </div>
+          <div class="layer__modules">
+            <div class="module">
+              <div class="module__icon">📝</div>
+              <h4 class="module__title">Grantový asistent</h4>
+              <p class="module__text">Pomáhá sestavit grantovou žádost: struktura, rozpočet, logický rámec, indikátory.
+              </p>
+            </div>
+            <div class="module">
+              <div class="module__icon">📡</div>
+              <h4 class="module__title">Komunikační hub</h4>
+              <p class="module__text">AI šablony e-mailů, letáky, FAQ chatbot na webu. Automatizace administrativy.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vrstva 4 -->
+        <div class="layer">
+          <div class="layer__header">
+            <span class="layer__num">04</span>
+            <h3 class="layer__title">Pro systémovou změnu</h3>
+            <p class="layer__desc">Data, která přesvědčí tvůrce politik</p>
+          </div>
+          <div class="layer__modules">
+            <div class="module module--wide">
+              <div class="module__icon">📈</div>
+              <h4 class="module__title">Impact data</h4>
+              <p class="module__text">Agregované anonymizované výsledky ze všech škol. Posun kompetencí, spokojenost,
+                follow-up. Evidence base pro MŠMT, NPI, zřizovatele.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ČÍSLA / STATS -->
+  <section class="section" id="cisla">
+    <div class="container">
+      <div class="section__header fade-up">
+        <span class="section__label">Proč teď</span>
+        <h2 class="section__title">Generace Z potřebuje jiný přístup</h2>
+      </div>
+      <div class="stats-grid fade-up">
+        <div class="stat-card">
+          <div class="stat-card__num">40 %</div>
+          <div class="stat-card__text">klíčových pracovních dovedností se změní do roku 2030</div>
+          <div class="stat-card__source">WEF, 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__num">50 %</div>
+          <div class="stat-card__text">studentů zanechá studia na VŠ</div>
+          <div class="stat-card__source">MŠMT, 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__num">86 %</div>
+          <div class="stat-card__text">Gen Z věří, že soft skills jsou klíčové pro úspěch</div>
+          <div class="stat-card__source">Bank of America, 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__num">6 %</div>
+          <div class="stat-card__text">Gen Z chce dosáhnout seniorní vedoucí pozice</div>
+          <div class="stat-card__source">Deloitte, 2025</div>
+        </div>
+      </div>
+
+      <blockquote class="quote fade-up">
+        <p>„Běžné kariérové poradenství říká žákovi, kam jít. Program ‚Čím budu?' ho učí, jak si cestu najít – a jak ji
+          měnit, když bude potřeba."</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ETIKA -->
+  <section class="section section--dark" id="etika">
+    <div class="container">
+      <div class="section__header fade-up">
+        <span class="section__label">Etický rámec</span>
+        <h2 class="section__title">AI, které respektuje studenta</h2>
+      </div>
+      <div class="ethics-grid fade-up">
+        <div class="ethic">
+          <div class="ethic__icon">👁️</div>
+          <h4>Transparentnost</h4>
+          <p>Student vždy ví, že komunikuje s AI. Žádné skryté profilování.</p>
+        </div>
+        <div class="ethic">
+          <div class="ethic__icon">🧭</div>
+          <h4>Autonomie</h4>
+          <p>AI navrhuje, student rozhoduje. Žádné „buď tímhle".</p>
+        </div>
+        <div class="ethic">
+          <div class="ethic__icon">🔒</div>
+          <h4>Bezpečí dat</h4>
+          <p>GDPR, šifrování, souhlas zákonného zástupce. Právo na výmaz.</p>
+        </div>
+        <div class="ethic">
+          <div class="ethic__icon">🚧</div>
+          <h4>Hranice</h4>
+          <p>AI nenahrazuje facilitátora ani psychologa. Eskalační protokol při krizi.</p>
+        </div>
+        <div class="ethic">
+          <div class="ethic__icon">⚖️</div>
+          <h4>Rovný přístup</h4>
+          <p>Offline alternativa vždy existuje. Funguje na telefonu.</p>
+        </div>
+        <div class="ethic">
+          <div class="ethic__icon">👀</div>
+          <h4>Supervize</h4>
+          <p>Facilitátor kontroluje AI výstupy. Žádný autopilot.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="section" id="roadmap">
+    <div class="container">
+      <div class="section__header fade-up">
+        <span class="section__label">Roadmap</span>
+        <h2 class="section__title">Od prototypu k platformě</h2>
+      </div>
+      <div class="timeline fade-up">
+        <div class="timeline__item">
+          <div class="timeline__dot"></div>
+          <div class="timeline__content">
+            <span class="timeline__date">Duben–červen 2026</span>
+            <h4>Fáze 0: Prototyp</h4>
+            <p>Reflexní chatbot na 1 škole. 5–10 studentů. Ověření konceptu.</p>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <div class="timeline__dot"></div>
+          <div class="timeline__content">
+            <span class="timeline__date">Září 2026 – leden 2027</span>
+            <h4>Fáze 1: MVP</h4>
+            <p>Chatbot + portfolio + deník facilitátora. 2–3 školy, 30–50 studentů.</p>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <div class="timeline__dot"></div>
+          <div class="timeline__content">
+            <span class="timeline__date">Únor–srpen 2027</span>
+            <h4>Fáze 2: Rozšíření</h4>
+            <p>6+ modulů, 6+ škol, evaluační data. Licence pro školy.</p>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <div class="timeline__dot"></div>
+          <div class="timeline__content">
+            <span class="timeline__date">Září 2027+</span>
+            <h4>Fáze 3: Platforma</h4>
+            <p>30+ škol. Open-source jádro. Erasmus+. Systémový dopad.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section class="section section--dark section--cta" id="kontakt">
+    <div class="container">
+      <div class="cta-block fade-up">
+        <h2 class="cta-block__title">Chcete program na vaší škole?</h2>
+        <p class="cta-block__text">Ať už jste ředitel, výchovný poradce, rodič nebo potenciální partner – ozvěte se.
+          Rádi vám program představíme.</p>
+        <div class="cta-block__contacts">
+          <a href="tel:+420777724334" class="cta-contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            777 724 334
+          </a>
+          <a href="mailto:lustig.domi@gmail.com" class="cta-contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            lustig.domi@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/dominika-lustig" target="_blank" class="cta-contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="nav__logo-ai">AI</span>KAPO
+        <span class="footer__sep">·</span>
+        <span>AI Kariérový Průvodce a Osobní rozvoj</span>
+      </div>
+      <div class="footer__meta">
+        <span>Program „Čím budu?" · Dominika Lustig</span>
+        <span class="footer__sep">·</span>
+        <span>AIKAPO platforma · Karel Krucký</span>
+      </div>
+      <div class="footer__copy">&copy; 2026 aikapo.cz</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
