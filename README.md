@@ -12,4 +12,4 @@ Tento repozitář obsahuje **pouze** statické soubory pro veřejný web (GitHub
 | Pro partnery | https://karelkrucky-svg.github.io/aikapo-pages/partneri.html |
 | Knowledge Graph | https://karelkrucky-svg.github.io/aikapo-pages/Knowledge-Graph-AIKAPO.html |
 
-Na landing stránkách A/B/C je vpravo dole přepínač mezi návrhy.
+Na landing stránkách A/B/C je vpravo dole přepínač mezi návrhy. Z menu a patičky vede odkaz **Mapa projektu** na knowledge graph (stejně jako tlačítko po sekci AI moduly).
