@@ -1,0 +1,39 @@
+/* AIKAPO – alternativní návrh C: světlý institucionální, modrá + serif */
+
+:root {
+  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-body: 'Source Sans 3', system-ui, sans-serif;
+
+  --bg-primary: #f7f8fb;
+  --bg-secondary: #e8ecf4;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0f3fa;
+
+  --text-primary: #141826;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+
+  --accent: #1e4d8b;
+  --accent-light: #2b6cb0;
+  --accent-glow: rgba(30, 77, 139, 0.2);
+  --accent-gradient: linear-gradient(135deg, #1e4d8b, #3182ce);
+  --accent-tint-08: rgba(30, 77, 139, 0.08);
+  --accent-tint-05: rgba(30, 77, 139, 0.06);
+  --accent-tint-border: rgba(30, 77, 139, 0.2);
+  --accent-tint-04: rgba(30, 77, 139, 0.05);
+
+  --green: #0d9488;
+
+  --border: rgba(20, 24, 38, 0.09);
+  --border-hover: rgba(20, 24, 38, 0.16);
+
+  --nav-scrolled-bg: rgba(247, 248, 251, 0.94);
+}
+
+.hero__glow {
+  opacity: 0.26;
+}
+
+.alt-switcher {
+  box-shadow: 0 10px 36px rgba(15, 23, 42, 0.1);
+}

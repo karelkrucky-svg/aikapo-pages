@@ -1,0 +1,28 @@
+/* AIKAPO – alternativní návrh B: teplý „les“, zelená + jantar, serif + DM Sans */
+
+:root {
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  --bg-primary: #0c1210;
+  --bg-secondary: #111a17;
+  --bg-card: #162220;
+  --bg-card-hover: #1c2d28;
+
+  --text-primary: #eef5f1;
+  --text-secondary: #8fa89e;
+  --text-muted: #5c7268;
+
+  --accent: #d4a24c;
+  --accent-light: #e8c77a;
+  --accent-glow: rgba(212, 162, 76, 0.22);
+  --accent-gradient: linear-gradient(135deg, #2a9d7a, #d4a24c);
+  --accent-tint-08: rgba(212, 162, 76, 0.12);
+  --accent-tint-05: rgba(42, 157, 122, 0.1);
+  --accent-tint-border: rgba(212, 162, 76, 0.3);
+  --accent-tint-04: rgba(42, 157, 122, 0.07);
+
+  --green: #3ecfae;
+
+  --nav-scrolled-bg: rgba(12, 18, 16, 0.92);
+}

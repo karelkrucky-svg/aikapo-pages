@@ -78,13 +78,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ---- FAQ accordion (partner page) ----
+  document.querySelectorAll('.faq-q').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      if (!item) return;
+      const open = item.classList.toggle('faq-item--open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
   // ---- Smooth scroll for anchor links ----
+  const scrollAnchorOffset = document.body.classList.contains('has-prototype-banner') ? 124 : 80;
+
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', (e) => {
       const target = document.querySelector(anchor.getAttribute('href'));
       if (target) {
         e.preventDefault();
-        const offset = 80;
+        const offset = scrollAnchorOffset;
         const top = target.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top, behavior: 'smooth' });
       }
